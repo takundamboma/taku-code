@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="teacher.ico" type="image/x-icon"> 
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="teacher.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Post Student Performance Comment</h2>
+        <form id="teacherForm">
+            <label for="studentName">Student Name:</label>
+            <input type="text" id="studentName" placeholder="Student Name" required>
+            <br><br>
+            <label for="comment">Comment:</label>
+            <textarea id="comment" placeholder="Enter comment" required></textarea>
+            <br><br>
+            <button type="submit">Post Comment</button>
+        </form>
+        <div id="commentDisplay"></div>
+    </div>
+
+    <script>
+       let comments = [];
+
+function postComment(e) {
+    e.preventDefault();
+    const name = document.getElementById('studentName').value;
+    const comment = document.getElementById('comment').value;
+
+    const commentObject = {
+        name,
+        comment
+    };
+
+    comments.push(commentObject);
+    localStorage.setItem('comments', JSON.stringify(comments));
+    document.getElementById('teacherForm').reset();
+}
+
+document.getElementById('teacherForm').addEventListener('submit', postComment);
+
+// Retrieve stored comments
+const storedComments = localStorage.getItem('comments');
+if (storedComments) {
+    comments = JSON.parse(storedComments);
+    const commentDisplay = document.getElementById('commentDisplay');
+    const commentHtml = comments.map(comment => {
+        return `
+            <div>
+                <h3>${comment.name}</h3>
+                <p>${comment.comment}</p>
+            </div>
+        `;
+    }).join('');
+    commentDisplay.innerHTML = commentHtml;
+}
+    </script>
+</body>
+</html>
